@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuộc thi ảnh Before &amp; After — Suleco</title>
+<style>
+  :root{
+    --primary:#e11d48;
+    --primary-dark:#9f1239;
+    --ink:#1a1a1a;
+    --muted:#6b7280;
+    --bg:#f7f7f8;
+    --card:#ffffff;
+    --border:#e5e7eb;
+    --gold:#d4af37;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  header.site{
+    background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+    color:#fff;
+    padding:28px 20px 24px;
+    text-align:center;
+    position:relative;
+  }
+  header.site h1{margin:0 0 6px;font-size:clamp(22px,4vw,32px);}
+  header.site p{margin:0;opacity:.9;font-size:14px;}
+  .admin-link{
+    position:absolute;top:14px;right:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.4);
+    color:#fff;padding:6px 12px;border-radius:20px;
+    font-size:12px;cursor:pointer;
+  }
+  .toolbar{
+    max-width:1100px;margin:20px auto 0;padding:0 16px;position:relative;z-index:2;
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  }
+  .tabs{
+    background:var(--card);border-radius:999px;padding:4px;
+    display:flex;gap:4px;box-shadow:0 4px 16px rgba(0,0,0,.08);
+  }
+  .tabs button{
+    border:none;background:transparent;padding:9px 18px;border-radius:999px;
+    font-weight:600;font-size:13px;cursor:pointer;color:var(--muted);
+  }
+  .tabs button.active{background:var(--primary);color:#fff;}
+  .btn-primary{
+    background:var(--primary);color:#fff;border:none;padding:11px 22px;
+    border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;
+    box-shadow:0 4px 16px rgba(225,29,72,.35);
+  }
+  .btn-primary:hover{background:var(--primary-dark);}
+  main{max-width:1100px;margin:24px auto 60px;padding:0 16px;}
+  .status-line{color:var(--muted);font-size:12px;margin:10px 2px 18px;text-align:right;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
+  .card{
+    background:var(--card);border-radius:var(--radius);overflow:hidden;
+    border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.04);
+    display:flex;flex-direction:column;
+  }
+  .card .rank{
+    position:absolute;margin:10px;background:var(--gold);color:#fff;
+    font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;
+  }
+  .photos{display:grid;grid-template-columns:1fr 1fr;position:relative;background:#000;}
+  .photos figure{margin:0;position:relative;aspect-ratio:1/1;overflow:hidden;background:#111;}
+  .photos img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photos figcaption{
+    position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);
+    color:#fff;font-size:11px;text-align:center;padding:3px 0;letter-spacing:.5px;
+  }
+  .card-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .card-body h3{margin:0;font-size:16px;}
+  .badge-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .badge{
+    font-size:11px;padding:3px 9px;border-radius:999px;background:#f1f1f3;color:var(--muted);font-weight:600;
+  }
+  .badge.category{background:#fde7ea;color:var(--primary-dark);}
+  .badge.status-pending{background:#fef3c7;color:#92400e;}
+  .badge.status-approved{background:#dcfce7;color:#166534;}
+  .stats{display:flex;gap:14px;font-size:13px;color:var(--muted);margin-top:2px;}
+  .stats b{color:var(--ink);}
+  .card-footer{margin-top:auto;display:flex;gap:8px;}
+  .fb-link{
+    flex:1;text-align:center;border:1px solid var(--border);border-radius:8px;
+    padding:8px;text-decoration:none;font-size:13px;color:var(--ink);font-weight:600;
+  }
+  .fb-link:hover{background:#f1f1f3;}
+  .empty{text-align:center;color:var(--muted);padding:60px 20px;font-size:14px;}
+
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;
+    align-items:flex-start;justify-content:center;padding:30px 14px;overflow-y:auto;z-index:100;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#fff;border-radius:16px;max-width:520px;width:100%;padding:24px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+  }
+  .modal h2{margin:0 0 4px;font-size:19px;}
+  .modal p.hint{margin:0 0 18px;color:var(--muted);font-size:13px;}
+  .modal .close{float:right;border:none;background:none;font-size:20px;cursor:pointer;color:var(--muted);}
+  label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px;}
+  input[type=text],input[type=url],select,textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;
+  }
+  .file-drop{
+    border:1.5px dashed var(--border);border-radius:10px;padding:14px;text-align:center;
+    font-size:13px;color:var(--muted);cursor:pointer;background:#fafafa;
+  }
+  .file-drop.has-file{border-color:var(--primary);color:var(--ink);}
+  .file-drop img.preview{max-height:110px;border-radius:6px;margin-top:8px;display:block;margin-left:auto;margin-right:auto;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .msg{font-size:13px;margin-top:12px;padding:10px 12px;border-radius:8px;display:none;}
+  .msg.error{background:#fee2e2;color:#991b1b;display:block;}
+  .msg.success{background:#dcfce7;color:#166534;display:block;}
+  .msg.warn{background:#fef3c7;color:#92400e;display:block;}
+  .submit-row{margin-top:18px;display:flex;gap:10px;}
+  .submit-row button{flex:1;}
+  .btn-secondary{
+    background:#fff;border:1px solid var(--border);padding:11px 18px;border-radius:999px;
+    font-weight:600;font-size:14px;cursor:pointer;
+  }
+
+  .admin-modal{max-width:960px;}
+  table.admin-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px;}
+  table.admin-table th,table.admin-table td{border-bottom:1px solid var(--border);padding:8px 6px;text-align:left;vertical-align:top;}
+  table.admin-table input[type=number],table.admin-table select,table.admin-table input[type=text]{
+    width:70px;padding:5px 6px;font-size:12px;border:1px solid var(--border);border-radius:6px;
+  }
+  table.admin-table select{width:100px;}
+  table.admin-table input.ghichu{width:120px;}
+  .thumb-pair{display:flex;gap:4px;}
+  .thumb-pair img{width:40px;height:40px;object-fit:cover;border-radius:4px;}
+  .row-actions{display:flex;flex-direction:column;gap:4px;}
+  .row-actions button{font-size:11px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;}
+  .row-actions button.save{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .row-actions button.danger{color:#b91c1c;border-color:#fca5a5;}
+  .spinner{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <button class="admin-link" onclick="openAdminLogin()">Quản trị</button>
+  <h1>📸 Cuộc thi ảnh Before &amp; After</h1>
+  <p>Học viên Suleco — theo dõi bài dự thi theo thời gian thực</p>
+</header>
+
+<div class="toolbar">
+  <div class="tabs">
+    <button class="active" data-cat="Chân dung" onclick="switchTab('Chân dung', this)">Chân dung</button>
+    <button data-cat="Phong cảnh" onclick="switchTab('Phong cảnh', this)">Phong cảnh</button>
+  </div>
+  <button class="btn-primary" onclick="openRegister()">+ Đăng ký dự thi</button>
+</div>
+
+<main>
+  <div class="status-line" id="statusLine">Đang tải dữ liệu…</div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- Register Modal -->
+<div class="modal-overlay" id="registerOverlay">
+  <div class="modal">
+    <button class="close" onclick="closeModal('registerOverlay')">&times;</button>
+    <h2>Đăng ký dự thi</h2>
+    <p class="hint">Gửi ảnh Trước / Sau gốc (không nén). Thông tin sẽ hiển thị công khai trên bảng xếp hạng.</p>
+    <form id="registerForm" onsubmit="return submitRegister(event)">
+      <label>Họ tên</label>
+      <input type="text" id="hoTen" required placeholder="Nguyễn Văn A">
+
+      <label>Hạng mục</label>
+      <select id="hangMuc" required>
+        <option value="Chân dung">Chân dung</option>
+        <option value="Phong cảnh">Phong cảnh</option>
+      </select>
+
+      <div class="two-col">
+        <div>
+          <label>Ảnh Trước</label>
+          <div class="file-drop" id="dropTruoc" onclick="document.getElementById('fileTruoc').click()">
+            Chọn ảnh "Trước"
+            <input type="file" id="fileTruoc" accept="image/*" style="display:none" onchange="handleFile(this,'dropTruoc','previewTruoc')">
+            <img class="preview" id="previewTruoc" style="display:none">
+          </div>
+        </div>
+        <div>
+          <label>Ảnh Sau</label>
+          <div class="file-drop" id="dropSau" onclick="document.getElementById('fileSau').click()">
+            Chọn ảnh "Sau"
+            <input type="file" id="fileSau" accept="image/*" style="display:none" onchange="handleFile(this,'dropSau','previewSau')">
+            <img class="preview" id="previewSau" style="display:none">
+          </div>
+        </div>
+      </div>
+
+      <label>Link bài đã đăng Facebook</label>
+      <input type="url" id="linkFacebook" required placeholder="https://facebook.com/...">
+
+      <div class="msg" id="registerMsg"></div>
+
+      <div class="submit-row">
+        <button type="button" class="btn-secondary" onclick="closeModal('registerOverlay')">Hủy</button>
+        <button type="submit" class="btn-primary" id="registerSubmitBtn">Gửi đăng ký</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Admin login modal -->
+<div class="modal-overlay" id="adminLoginOverlay">
+  <div class="modal">
+    <button class="close" onclick="closeModal('adminLoginOverlay')">&times;</button>
+    <h2>Đăng nhập Quản trị</h2>
+    <p class="hint">Dành cho Ban tổ chức để cập nhật số liệu bình chọn.</p>
+    <label>Mật khẩu</label>
+    <input type="text" id="adminPassword" placeholder="Nhập mật khẩu admin">
+    <div class="msg" id="adminLoginMsg"></div>
+    <div class="submit-row">
+      <button type="button" class="btn-secondary" onclick="closeModal('adminLoginOverlay')">Hủy</button>
+      <button type="button" class="btn-primary" onclick="doAdminLogin()">Đăng nhập</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin panel modal -->
+<div class="modal-overlay" id="adminPanelOverlay">
+  <div class="modal admin-modal">
+    <button class="close" onclick="closeModal('adminPanelOverlay')">&times;</button>
+    <h2>Quản trị bài dự thi</h2>
+    <p class="hint">Cập nhật số Like / Share / Điểm BTC / Trạng thái cho từng bài, sau đó bấm Lưu.</p>
+    <div style="max-height:60vh;overflow:auto;">
+      <table class="admin-table" id="adminTable">
+        <thead>
+          <tr>
+            <th>Ảnh</th><th>Họ tên</th><th>Hạng mục</th><th>Like</th><th>Share</th>
+            <th>Điểm BTC</th><th>Trạng thái</th><th>Ghi chú</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ====== CẤU HÌNH ======
+  // Dán URL Web App (kết thúc bằng /exec) sau khi deploy Apps Script vào đây:
+  const CONFIG = {
+    WEBAPP_URL: 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE',
+    REFRESH_MS: 15000,
+    MAX_TOTAL_MB: 45 // cảnh báo nếu 2 ảnh base64 cộng lại vượt mức này
+  };
+
+  let allData = [];
+  let currentTab = 'Chân dung';
+  let adminPassword = null;
+
+  function switchTab(cat, btn){
+    currentTab = cat;
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }
+
+  function escapeHtml(s){
+    return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function loadData(){
+    if(CONFIG.WEBAPP_URL.indexOf('PASTE_YOUR') === 0){
+      document.getElementById('statusLine').textContent = 'Chưa cấu hình WEBAPP_URL trong index.html';
+      return;
+    }
+    try{
+      const res = await fetch(CONFIG.WEBAPP_URL + '?action=list');
+      const json = await res.json();
+      if(json.ok){
+        allData = json.data;
+        render();
+        document.getElementById('statusLine').textContent =
+          'Cập nhật lúc ' + new Date().toLocaleTimeString('vi-VN');
+      }
+    }catch(err){
+      document.getElementById('statusLine').textContent = 'Lỗi tải dữ liệu: ' + err.message;
+    }
+  }
+
+  function score(item){
+    const like = Number(item.SoLike)||0, share = Number(item.SoShare)||0, diem = Number(item.DiemBTC)||0;
+    return diem*1000 + like + share*2;
+  }
+
+  function render(){
+    const grid = document.getElementById('grid');
+    const items = allData
+      .filter(d => d.HangMuc === currentTab && d.TrangThai !== 'Từ chối')
+      .sort((a,b)=> score(b)-score(a));
+
+    if(items.length===0){
+      grid.innerHTML = '<div class="empty">Chưa có bài dự thi nào trong hạng mục này.</div>';
+      return;
+    }
+
+    grid.innerHTML = items.map((it, idx) => `
+      <div class="card">
+        <div class="photos">
+          ${idx<3 ? `<div class="rank">#${idx+1}</div>` : ''}
+          <figure><img src="${it.AnhTruocUrl||''}" loading="lazy"><figcaption>TRƯỚC</figcaption></figure>
+          <figure><img src="${it.AnhSauUrl||''}" loading="lazy"><figcaption>SAU</figcaption></figure>
+        </div>
+        <div class="card-body">
+          <h3>${escapeHtml(it.HoTen)}</h3>
+          <div class="badge-row">
+            <span class="badge category">${escapeHtml(it.HangMuc)}</span>
+            <span class="badge ${it.TrangThai==='Đã duyệt'?'status-approved':'status-pending'}">${escapeHtml(it.TrangThai||'Chờ duyệt')}</span>
+          </div>
+          <div class="stats">
+            <span>👍 <b>${Number(it.SoLike)||0}</b></span>
+            <span>🔁 <b>${Number(it.SoShare)||0}</b></span>
+            <span>⭐ <b>${Number(it.DiemBTC)||0}</b></span>
+          </div>
+          <div class="card-footer">
+            <a class="fb-link" href="${it.LinkFacebook}" target="_blank" rel="noopener">Xem bài Facebook ↗</a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ---------- Register modal ----------
+  const fileData = { truoc: null, sau: null };
+
+  function openRegister(){
+    document.getElementById('registerOverlay').classList.add('open');
+  }
+  function closeModal(id){
+    document.getElementById(id).classList.remove('open');
+  }
+
+  function readFileAsBase64(file){
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleFile(input, dropId, previewId){
+    const file = input.files[0];
+    if(!file) return;
+    const key = dropId === 'dropTruoc' ? 'truoc' : 'sau';
+    const base64 = await readFileAsBase64(file);
+    fileData[key] = { name: file.name, mimeType: file.type || 'image/jpeg', data: base64, sizeMB: file.size/1024/1024 };
+
+    const preview = document.getElementById(previewId);
+    preview.src = 'data:' + fileData[key].mimeType + ';base64,' + base64;
+    preview.style.display = 'block';
+    document.getElementById(dropId).classList.add('has-file');
+
+    const totalMB = (fileData.truoc?.sizeMB||0) + (fileData.sau?.sizeMB||0);
+    const msg = document.getElementById('registerMsg');
+    if(totalMB > CONFIG.MAX_TOTAL_MB){
+      msg.className = 'msg warn';
+      msg.style.display = 'block';
+      msg.textContent = `Tổng dung lượng 2 ảnh khá lớn (~${totalMB.toFixed(1)}MB), có thể gửi chậm hoặc lỗi. Nếu lỗi, hãy xuất lại ảnh JPG chất lượng cao thay vì file RAW gốc.`;
+    } else {
+      msg.style.display = 'none';
+    }
+  }
+
+  async function submitRegister(ev){
+    ev.preventDefault();
+    const msg = document.getElementById('registerMsg');
+    const hoTen = document.getElementById('hoTen').value.trim();
+    const hangMuc = document.getElementById('hangMuc').value;
+    const linkFacebook = document.getElementById('linkFacebook').value.trim();
+
+    if(!fileData.truoc || !fileData.sau){
+      msg.className = 'msg error'; msg.style.display='block';
+      msg.textContent = 'Vui lòng chọn đủ ảnh Trước và Sau.';
+      return false;
+    }
+
+    const btn = document.getElementById('registerSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Đang gửi…';
+
+    try{
+      const res = await fetch(CONFIG.WEBAPP_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'register',
+          hoTen, hangMuc, linkFacebook,
+          anhTruoc: { name: fileData.truoc.name, mimeType: fileData.truoc.mimeType, data: fileData.truoc.data },
+          anhSau: { name: fileData.sau.name, mimeType: fileData.sau.mimeType, data: fileData.sau.data }
+        })
+      });
+      const json = await res.json();
+      if(json.ok){
+        msg.className = 'msg success'; msg.style.display='block';
+        msg.textContent = 'Đăng ký thành công! Bài của bạn sẽ hiển thị sau khi BTC duyệt.';
+        document.getElementById('registerForm').reset();
+        fileData.truoc = null; fileData.sau = null;
+        document.getElementById('previewTruoc').style.display='none';
+        document.getElementById('previewSau').style.display='none';
+        document.getElementById('dropTruoc').classList.remove('has-file');
+        document.getElementById('dropSau').classList.remove('has-file');
+        loadData();
+        setTimeout(()=>closeModal('registerOverlay'), 1800);
+      } else {
+        msg.className = 'msg error'; msg.style.display='block';
+        msg.textContent = 'Lỗi: ' + (json.error||'Không rõ nguyên nhân');
+      }
+    }catch(err){
+      msg.className = 'msg error'; msg.style.display='block';
+      msg.textContent = 'Lỗi gửi dữ liệu: ' + err.message;
+    }finally{
+      btn.disabled = false;
+      btn.textContent = 'Gửi đăng ký';
+    }
+    return false;
+  }
+
+  // ---------- Admin ----------
+  function openAdminLogin(){
+    document.getElementById('adminLoginOverlay').classList.add('open');
+  }
+
+  async function doAdminLogin(){
+    const pass = document.getElementById('adminPassword').value;
+    const msg = document.getElementById('adminLoginMsg');
+    try{
+      const res = await fetch(CONFIG.WEBAPP_URL, {
+        method:'POST', body: JSON.stringify({ action:'adminLogin', password: pass })
+      });
+      const json = await res.json();
+      if(json.ok){
+        adminPassword = pass;
+        closeModal('adminLoginOverlay');
+        openAdminPanel();
+      } else {
+        msg.className='msg error'; msg.style.display='block';
+        msg.textContent='Sai mật khẩu.';
+      }
+    }catch(err){
+      msg.className='msg error'; msg.style.display='block';
+      msg.textContent='Lỗi: '+err.message;
+    }
+  }
+
+  function openAdminPanel(){
+    renderAdminTable();
+    document.getElementById('adminPanelOverlay').classList.add('open');
+  }
+
+  function renderAdminTable(){
+    const body = document.getElementById('adminTableBody');
+    body.innerHTML = allData.map(it => `
+      <tr data-id="${it.ID}">
+        <td>
+          <div class="thumb-pair">
+            <img src="${it.AnhTruocUrl||''}"><img src="${it.AnhSauUrl||''}">
+          </div>
+        </td>
+        <td>${escapeHtml(it.HoTen)}<br><a href="${it.LinkFacebook}" target="_blank" style="font-size:11px;">Facebook ↗</a></td>
+        <td>${escapeHtml(it.HangMuc)}</td>
+        <td><input type="number" class="f-like" value="${Number(it.SoLike)||0}"></td>
+        <td><input type="number" class="f-share" value="${Number(it.SoShare)||0}"></td>
+        <td><input type="number" class="f-diem" value="${Number(it.DiemBTC)||0}"></td>
+        <td>
+          <select class="f-trangthai">
+            ${['Chờ duyệt','Đã duyệt','Từ chối'].map(s=>`<option ${it.TrangThai===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </td>
+        <td><input type="text" class="f-ghichu ghichu" value="${escapeHtml(it.GhiChu||'')}"></td>
+        <td class="row-actions">
+          <button class="save" onclick="saveRow('${it.ID}', this)">Lưu</button>
+          <button class="danger" onclick="deleteRow('${it.ID}', this)">Xóa</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function saveRow(id, btn){
+    const tr = btn.closest('tr');
+    const fields = {
+      SoLike: Number(tr.querySelector('.f-like').value)||0,
+      SoShare: Number(tr.querySelector('.f-share').value)||0,
+      DiemBTC: Number(tr.querySelector('.f-diem').value)||0,
+      TrangThai: tr.querySelector('.f-trangthai').value,
+      GhiChu: tr.querySelector('.f-ghichu').value
+    };
+    btn.textContent = '...';
+    try{
+      const res = await fetch(CONFIG.WEBAPP_URL, {
+        method:'POST', body: JSON.stringify({ action:'adminUpdate', password: adminPassword, id, fields })
+      });
+      const json = await res.json();
+      if(json.ok){
+        btn.textContent = 'Đã lưu ✓';
+        await loadData();
+        setTimeout(()=>{btn.textContent='Lưu';}, 1200);
+      } else {
+        alert('Lỗi: '+json.error);
+        btn.textContent = 'Lưu';
+      }
+    }catch(err){
+      alert('Lỗi: '+err.message);
+      btn.textContent = 'Lưu';
+    }
+  }
+
+  async function deleteRow(id, btn){
+    if(!confirm('Xóa bài dự thi này khỏi hệ thống?')) return;
+    try{
+      const res = await fetch(CONFIG.WEBAPP_URL, {
+        method:'POST', body: JSON.stringify({ action:'adminDelete', password: adminPassword, id })
+      });
+      const json = await res.json();
+      if(json.ok){
+        await loadData();
+        renderAdminTable();
+      } else {
+        alert('Lỗi: '+json.error);
+      }
+    }catch(err){
+      alert('Lỗi: '+err.message);
+    }
+  }
+
+  loadData();
+  setInterval(loadData, CONFIG.REFRESH_MS);
+</script>
+</body>
+</html>
