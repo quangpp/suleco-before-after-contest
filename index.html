@@ -302,6 +302,13 @@
     return diem*1000 + like + share*2;
   }
 
+  function driveImg(url){
+    if(!url) return '';
+    const m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if(m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w1000';
+    return url;
+  }
+
   function render(){
     const grid = document.getElementById('grid');
     const items = allData
@@ -317,8 +324,8 @@
       <div class="card">
         <div class="photos">
           ${idx<3 ? `<div class="rank">#${idx+1}</div>` : ''}
-          <figure><img src="${it.AnhTruocUrl||''}" loading="lazy"><figcaption>TRƯỚC</figcaption></figure>
-          <figure><img src="${it.AnhSauUrl||''}" loading="lazy"><figcaption>SAU</figcaption></figure>
+          <figure><img src="${driveImg(it.AnhTruocUrl)}" loading="lazy"><figcaption>TRƯỚC</figcaption></figure>
+          <figure><img src="${driveImg(it.AnhSauUrl)}" loading="lazy"><figcaption>SAU</figcaption></figure>
         </div>
         <div class="card-body">
           <h3>${escapeHtml(it.HoTen)}</h3>
@@ -472,7 +479,7 @@
       <tr data-id="${it.ID}">
         <td>
           <div class="thumb-pair">
-            <img src="${it.AnhTruocUrl||''}"><img src="${it.AnhSauUrl||''}">
+            <img src="${driveImg(it.AnhTruocUrl)}"><img src="${driveImg(it.AnhSauUrl)}">
           </div>
         </td>
         <td>${escapeHtml(it.HoTen)}<br><a href="${it.LinkFacebook}" target="_blank" style="font-size:11px;">Facebook ↗</a></td>
