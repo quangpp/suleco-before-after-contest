@@ -48,16 +48,26 @@
     margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.5px;
     color:var(--muted);text-transform:uppercase;
   }
+  .student-gallery-viewport{
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
+  }
   .student-gallery-track{
-    display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;
+    display:flex;gap:12px;width:max-content;
+    animation:gallery-scroll 32s linear infinite;
   }
   .student-gallery-track img{
     flex:0 0 auto;width:150px;height:190px;object-fit:cover;border-radius:12px;
-    box-shadow:0 3px 10px rgba(0,0,0,.08);scroll-snap-align:start;background:#eee;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);background:#eee;
+    pointer-events:none;user-select:none;-webkit-user-drag:none;
   }
-  .student-gallery-track::-webkit-scrollbar{height:6px;}
-  .student-gallery-track::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+  @keyframes gallery-scroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
   @media (max-width:640px){.student-gallery-track img{width:120px;height:154px;}}
+  @media (prefers-reduced-motion:reduce){.student-gallery-track{animation:none;}}
 
   .toolbar{
     max-width:1100px;margin:20px auto 0;padding:0 16px;position:relative;z-index:2;
@@ -70,14 +80,17 @@
   .tabs button{
     border:none;background:transparent;padding:9px 18px;border-radius:999px;
     font-weight:600;font-size:13px;cursor:pointer;color:var(--muted);
+    transition:background .2s,color .2s;
   }
   .tabs button.active{background:var(--primary);color:#fff;}
   .btn-primary{
     background:var(--primary);color:#fff;border:none;padding:11px 22px;
     border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;
     box-shadow:0 4px 16px rgba(225,29,72,.35);
+    transition:background .2s,transform .12s;
   }
   .btn-primary:hover{background:var(--primary-dark);}
+  .btn-primary:active,.btn-secondary:active,.tabs button:active{transform:scale(.96);}
   main{max-width:1100px;margin:24px auto 60px;padding:0 16px;}
   .status-line{color:var(--muted);font-size:12px;margin:10px 2px 18px;text-align:right;}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
@@ -85,6 +98,17 @@
     background:var(--card);border-radius:var(--radius);overflow:hidden;
     border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.04);
     display:flex;flex-direction:column;
+    transition:transform .2s ease,box-shadow .2s ease;
+    animation:card-in .4s ease backwards;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,.1);}
+  .card .photos img{transition:transform .35s ease;}
+  .card:hover .photos img{transform:scale(1.04);}
+  @keyframes card-in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion:reduce){
+    .card{animation:none;}
+    .card:hover{transform:none;}
+    .card:hover .photos img{transform:none;}
   }
   .card .rank{
     position:absolute;margin:10px;background:var(--gold);color:#fff;
@@ -112,6 +136,7 @@
   .fb-link{
     flex:1;text-align:center;border:1px solid var(--border);border-radius:8px;
     padding:8px;text-decoration:none;font-size:13px;color:var(--ink);font-weight:600;
+    transition:background .15s;
   }
   .fb-link:hover{background:#f1f1f3;}
   .empty{text-align:center;color:var(--muted);padding:60px 20px;font-size:14px;}
@@ -135,13 +160,20 @@
   .site-footer .rules-line{margin-bottom:2px;}
 
   .modal-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;
+    position:fixed;inset:0;background:rgba(0,0,0,0);display:none;
     align-items:flex-start;justify-content:center;padding:30px 14px;overflow-y:auto;z-index:100;
+    transition:background-color .2s ease;
   }
-  .modal-overlay.open{display:flex;}
+  .modal-overlay.open{display:flex;background:rgba(0,0,0,.5);}
   .modal{
     background:#fff;border-radius:16px;max-width:520px;width:100%;padding:24px;
     box-shadow:0 20px 60px rgba(0,0,0,.25);
+    opacity:0;transform:translateY(10px) scale(.98);
+    animation:modal-in .22s ease forwards;
+  }
+  @keyframes modal-in{to{opacity:1;transform:translateY(0) scale(1);}}
+  @media (prefers-reduced-motion:reduce){
+    .modal{animation:none;opacity:1;transform:none;}
   }
   .modal h2{margin:0 0 4px;font-size:19px;}
   .modal p.hint{margin:0 0 18px;color:var(--muted);font-size:13px;}
@@ -213,15 +245,26 @@
 <!-- Dải ảnh học viên (ngoài lề cuộc thi) - đang dùng ảnh placeholder, thay bằng ảnh thật của Suleco khi có -->
 <section class="student-gallery">
   <p class="student-gallery-label">Khoảnh khắc học viên Suleco</p>
-  <div class="student-gallery-track">
-    <img src="https://picsum.photos/seed/suleco1/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco2/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco3/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco4/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco5/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco6/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco7/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco8/300/380" loading="lazy" alt="Học viên Suleco">
+  <div class="student-gallery-viewport">
+    <div class="student-gallery-track">
+      <img src="https://picsum.photos/seed/suleco1/300/380" alt="Học viên Suleco">
+      <img src="https://picsum.photos/seed/suleco2/300/380" alt="Học viên Suleco">
+      <img src="https://picsum.photos/seed/suleco3/300/380" alt="Học viên Suleco">
+      <img src="https://picsum.photos/seed/suleco4/300/380" alt="Học viên Suleco">
+      <img src="https://picsum.photos/seed/suleco5/300/380" alt="Học viên Suleco">
+      <img src="https://picsum.photos/seed/suleco6/300/380" alt="Học viên Suleco">
+      <img src="https://picsum.photos/seed/suleco7/300/380" alt="Học viên Suleco">
+      <img src="https://picsum.photos/seed/suleco8/300/380" alt="Học viên Suleco">
+      <!-- Nhân đôi để cuộn liền mạch (seamless loop) - không thêm/bớt khi thay ảnh thật, chỉ cần giữ y hệt bộ ảnh phía trên -->
+      <img src="https://picsum.photos/seed/suleco1/300/380" alt="Học viên Suleco" aria-hidden="true">
+      <img src="https://picsum.photos/seed/suleco2/300/380" alt="Học viên Suleco" aria-hidden="true">
+      <img src="https://picsum.photos/seed/suleco3/300/380" alt="Học viên Suleco" aria-hidden="true">
+      <img src="https://picsum.photos/seed/suleco4/300/380" alt="Học viên Suleco" aria-hidden="true">
+      <img src="https://picsum.photos/seed/suleco5/300/380" alt="Học viên Suleco" aria-hidden="true">
+      <img src="https://picsum.photos/seed/suleco6/300/380" alt="Học viên Suleco" aria-hidden="true">
+      <img src="https://picsum.photos/seed/suleco7/300/380" alt="Học viên Suleco" aria-hidden="true">
+      <img src="https://picsum.photos/seed/suleco8/300/380" alt="Học viên Suleco" aria-hidden="true">
+    </div>
   </div>
 </section>
 
@@ -400,7 +443,7 @@
     }
 
     grid.innerHTML = items.map((it, idx) => `
-      <div class="card">
+      <div class="card" style="animation-delay:${Math.min(idx,10)*40}ms">
         <div class="photos">
           ${idx<3 ? `<div class="rank">#${idx+1}</div>` : ''}
           <figure><img src="${driveImg(it.AnhTruocUrl, 450)}" loading="lazy"><figcaption>TRƯỚC</figcaption></figure>
