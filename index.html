@@ -29,6 +29,30 @@
       repeating-linear-gradient(-45deg, rgba(225,29,72,.035) 0, rgba(225,29,72,.035) 1px, transparent 1px, transparent 42px);
     background-attachment:fixed;
     color:var(--ink);
+    position:relative;
+  }
+  /* Dải gradient "hành trình chuyển đổi" trái (xám/lạnh) -> phải (đỏ thương hiệu/ấm),
+     trôi rất nhẹ bằng transform (GPU, không tốn CPU/JS). */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:-10% -15%;
+    z-index:-1;
+    pointer-events:none;
+    background:linear-gradient(90deg,
+      rgba(100,116,139,.06) 0%,
+      transparent 45%,
+      transparent 55%,
+      rgba(225,29,72,.07) 100%);
+    animation:journey-drift 26s ease-in-out infinite;
+    will-change:transform;
+  }
+  @keyframes journey-drift{
+    0%,100%{transform:translateX(-2%);}
+    50%{transform:translateX(2%);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    body::before{animation:none;}
   }
   header.site{
     background:linear-gradient(135deg,var(--primary-dark),var(--primary));
