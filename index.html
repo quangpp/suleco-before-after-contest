@@ -373,13 +373,13 @@
   <div class="modal">
     <button class="close" onclick="closeModal('adminLoginOverlay')">&times;</button>
     <h2>Đăng nhập Quản trị</h2>
-    <p class="hint">Dành cho Ban tổ chức để cập nhật số liệu bình chọn.</p>
+    <p class="hint">Dành cho Ban tổ chức để cập nhật số liệu bình chọn. Lần đăng nhập đầu có thể mất vài giây do máy chủ miễn phí cần "khởi động".</p>
     <label>Mật khẩu</label>
-    <input type="text" id="adminPassword" placeholder="Nhập mật khẩu admin">
+    <input type="text" id="adminPassword" placeholder="Nhập mật khẩu admin" onkeydown="if(event.key==='Enter') doAdminLogin()">
     <div class="msg" id="adminLoginMsg"></div>
     <div class="submit-row">
       <button type="button" class="btn-secondary" onclick="closeModal('adminLoginOverlay')">Hủy</button>
-      <button type="button" class="btn-primary" onclick="doAdminLogin()">Đăng nhập</button>
+      <button type="button" class="btn-primary" id="adminLoginBtn" onclick="doAdminLogin()">Đăng nhập</button>
     </div>
   </div>
 </div>
@@ -623,12 +623,22 @@
   }
 
   async function doAdminLogin(){
+    const btn = document.getElementById('adminLoginBtn');
+    if(btn.disabled) return; // chặn bấm nhiều lần khi đang chờ, tránh làm chậm thêm
     const pass = document.getElementById('adminPassword').value;
     const msg = document.getElementById('adminLoginMsg');
+    msg.style.display = 'none';
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.innerHTML = '<span class="spinner"></span> Đang kiểm tra…';
+    const controller = new AbortController();
+    const timeoutId = setTimeout(()=>controller.abort(), 25000);
     try{
       const res = await fetch(CONFIG.WEBAPP_URL, {
-        method:'POST', body: JSON.stringify({ action:'adminLogin', password: pass })
+        method:'POST', body: JSON.stringify({ action:'adminLogin', password: pass }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
       const json = await res.json();
       if(json.ok){
         adminPassword = pass;
@@ -640,7 +650,13 @@
       }
     }catch(err){
       msg.className='msg error'; msg.style.display='block';
-      msg.textContent='Lỗi: '+err.message;
+      msg.textContent = err.name === 'AbortError'
+        ? 'Máy chủ phản hồi quá chậm, vui lòng thử lại.'
+        : 'Lỗi: '+err.message;
+    }finally{
+      clearTimeout(timeoutId);
+      btn.disabled = false;
+      btn.textContent = originalText;
     }
   }
 
