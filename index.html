@@ -43,6 +43,22 @@
     color:#fff;padding:6px 12px;border-radius:20px;
     font-size:12px;cursor:pointer;
   }
+  .student-gallery{max-width:1100px;margin:22px auto 0;padding:0 16px;}
+  .student-gallery-label{
+    margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.5px;
+    color:var(--muted);text-transform:uppercase;
+  }
+  .student-gallery-track{
+    display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;
+  }
+  .student-gallery-track img{
+    flex:0 0 auto;width:150px;height:190px;object-fit:cover;border-radius:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);scroll-snap-align:start;background:#eee;
+  }
+  .student-gallery-track::-webkit-scrollbar{height:6px;}
+  .student-gallery-track::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+  @media (max-width:640px){.student-gallery-track img{width:120px;height:154px;}}
+
   .toolbar{
     max-width:1100px;margin:20px auto 0;padding:0 16px;position:relative;z-index:2;
     display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
@@ -169,6 +185,21 @@
   <h1>Cuộc thi ảnh "Hành trình Ngày ấy - Bây giờ"</h1>
   <p>Học viên Suleco — theo dõi bài dự thi theo thời gian thực</p>
 </header>
+
+<!-- Dải ảnh học viên (ngoài lề cuộc thi) — đang dùng ảnh placeholder, thay bằng ảnh thật của Suleco khi có -->
+<section class="student-gallery">
+  <p class="student-gallery-label">Khoảnh khắc học viên Suleco</p>
+  <div class="student-gallery-track">
+    <img src="https://picsum.photos/seed/suleco1/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco2/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco3/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco4/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco5/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco6/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco7/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco8/300/380" loading="lazy" alt="Học viên Suleco">
+  </div>
+</section>
 
 <div class="toolbar">
   <div class="tabs">
