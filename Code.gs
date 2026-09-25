@@ -16,6 +16,12 @@ const DRIVE_FOLDER_NAME = 'Suleco BA Contest - Anh';
 const HEADERS = ['Timestamp', 'ID', 'HoTen', 'HangMuc', 'LinkFacebook',
   'AnhTruocUrl', 'AnhSauUrl', 'SoLike', 'SoShare', 'DiemBTC', 'TrangThai', 'GhiChu', 'SoComment', 'DongYSuDungAnh'];
 
+function nowVietnam_() {
+  // Ghi timestamp dạng chuỗi giờ Việt Nam cố định, không phụ thuộc múi giờ
+  // cấu hình trong Google Sheet (tránh lệch giờ khi Sheet để múi giờ khác).
+  return Utilities.formatDate(new Date(), 'Asia/Ho_Chi_Minh', 'dd/MM/yyyy HH:mm:ss');
+}
+
 function setAdminPassword() {
   // Run this once manually, after editing the password string below.
   PropertiesService.getScriptProperties().setProperty('ADMIN_PASSWORD', 'DoiMatKhauNay123');
@@ -157,7 +163,7 @@ function handleRegister_(payload) {
 
   const sheet = getSheet_();
   sheet.appendRow([
-    new Date(), id, hoTen, hangMuc, linkFacebook,
+    nowVietnam_(), id, hoTen, hangMuc, linkFacebook,
     anhTruocUrl, anhSauUrl, 0, 0, 0, 'Chờ duyệt', '', 0, 'Có'
   ]);
 

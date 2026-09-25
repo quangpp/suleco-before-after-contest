@@ -91,6 +91,7 @@
   }
   .btn-primary:hover{background:var(--primary-dark);}
   .btn-primary:active,.btn-secondary:active,.tabs button:active{transform:scale(.96);}
+  .btn-primary:disabled{background:#e5a4b0;box-shadow:none;cursor:not-allowed;transform:none;}
   main{max-width:1100px;margin:24px auto 60px;padding:0 16px;}
   .status-line{color:var(--muted);font-size:12px;margin:10px 2px 18px;text-align:right;}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
@@ -334,7 +335,7 @@
     <p class="hint">Gửi ảnh Trước / Sau gốc (không nén). Thông tin sẽ hiển thị công khai trên bảng xếp hạng.</p>
     <form id="registerForm" onsubmit="return submitRegister(event)">
       <label>Họ tên</label>
-      <input type="text" id="hoTen" required placeholder="Nguyễn Văn A">
+      <input type="text" id="hoTen" required placeholder="Nguyễn Văn A" oninput="updateSubmitState()">
 
       <label>Hạng mục</label>
       <select id="hangMuc" required>
@@ -362,10 +363,10 @@
       </div>
 
       <label>Link bài đã đăng Facebook</label>
-      <input type="url" id="linkFacebook" required placeholder="https://facebook.com/...">
+      <input type="url" id="linkFacebook" required placeholder="https://facebook.com/..." oninput="updateSubmitState()">
 
       <label class="consent-row">
-        <input type="checkbox" id="dongYSuDungAnh" required>
+        <input type="checkbox" id="dongYSuDungAnh" required onchange="updateSubmitState()">
         <span>Chấp nhận cho Suleco sử dụng hình ảnh cho mục đích truyền thông</span>
       </label>
 
@@ -373,7 +374,7 @@
 
       <div class="submit-row">
         <button type="button" class="btn-secondary" onclick="closeModal('registerOverlay')">Hủy</button>
-        <button type="submit" class="btn-primary" id="registerSubmitBtn">Gửi đăng ký</button>
+        <button type="submit" class="btn-primary" id="registerSubmitBtn" disabled>Gửi đăng ký</button>
       </div>
     </form>
   </div>
@@ -538,6 +539,15 @@
 
   function openRegister(){
     document.getElementById('registerOverlay').classList.add('open');
+    updateSubmitState();
+  }
+
+  function updateSubmitState(){
+    const hoTen = document.getElementById('hoTen').value.trim();
+    const linkFacebook = document.getElementById('linkFacebook').value.trim();
+    const dongY = document.getElementById('dongYSuDungAnh').checked;
+    const hopLe = hoTen && linkFacebook && dongY && fileData.truoc && fileData.sau;
+    document.getElementById('registerSubmitBtn').disabled = !hopLe;
   }
   function closeModal(id){
     document.getElementById(id).classList.remove('open');
@@ -563,6 +573,7 @@
     preview.src = 'data:' + fileData[key].mimeType + ';base64,' + base64;
     preview.style.display = 'block';
     document.getElementById(dropId).classList.add('has-file');
+    updateSubmitState();
 
     const totalMB = (fileData.truoc?.sizeMB||0) + (fileData.sau?.sizeMB||0);
     const msg = document.getElementById('registerMsg');
@@ -618,6 +629,7 @@
         document.getElementById('previewSau').style.display='none';
         document.getElementById('dropTruoc').classList.remove('has-file');
         document.getElementById('dropSau').classList.remove('has-file');
+        updateSubmitState();
         loadData();
         setTimeout(()=>closeModal('registerOverlay'), 1800);
       } else {
@@ -628,8 +640,8 @@
       msg.className = 'msg error'; msg.style.display='block';
       msg.textContent = 'Lỗi gửi dữ liệu: ' + err.message;
     }finally{
-      btn.disabled = false;
       btn.textContent = 'Gửi đăng ký';
+      updateSubmitState();
     }
     return false;
   }
