@@ -476,20 +476,28 @@
       return;
     }
 
-    // Top 3 nổi bật theo đúng cột Điểm BTC (độc lập với thứ tự sắp xếp tổng hợp ở trên)
+    // Top 3 nổi bật theo đúng cột Điểm BTC, tính riêng cho TỪNG hạng mục
+    // (ở tab "Tất cả", mỗi hạng mục có bộ Top 1/2/3 riêng, hiển thị đầy đủ cùng lúc)
     const topDiemRank = {};
-    [...items]
-      .filter(d => (Number(d.DiemBTC)||0) > 0)
-      .sort((a,b) => (Number(b.DiemBTC)||0) - (Number(a.DiemBTC)||0))
-      .slice(0,3)
-      .forEach((d,i) => { topDiemRank[d.ID] = i+1; });
+    const byCat = {};
+    items.forEach(d => {
+      const cat = d.HangMuc || '';
+      (byCat[cat] = byCat[cat] || []).push(d);
+    });
+    Object.keys(byCat).forEach(cat => {
+      byCat[cat]
+        .filter(d => (Number(d.DiemBTC)||0) > 0)
+        .sort((a,b) => (Number(b.DiemBTC)||0) - (Number(a.DiemBTC)||0))
+        .slice(0,3)
+        .forEach((d,i) => { topDiemRank[d.ID] = { rank: i+1, cat }; });
+    });
 
     grid.innerHTML = items.map((it, idx) => {
-      const diemRank = topDiemRank[it.ID];
+      const top = topDiemRank[it.ID];
       return `
-      <div class="card ${diemRank ? 'top-diem rank-'+diemRank : ''}" style="animation-delay:${Math.min(idx,10)*40}ms">
+      <div class="card ${top ? 'top-diem rank-'+top.rank : ''}" style="animation-delay:${Math.min(idx,10)*40}ms">
         <div class="photos">
-          ${diemRank ? `<div class="diem-badge rank-${diemRank}">🏆 Top ${diemRank} · Điểm BTC</div>` : ''}
+          ${top ? `<div class="diem-badge rank-${top.rank}">🏆 Top ${top.rank} · ${escapeHtml(top.cat)}</div>` : ''}
           <figure><img src="${driveImg(it.AnhTruocUrl, 450)}" loading="lazy"><figcaption>TRƯỚC</figcaption></figure>
           <figure><img src="${driveImg(it.AnhSauUrl, 450)}" loading="lazy"><figcaption>SAU</figcaption></figure>
         </div>
