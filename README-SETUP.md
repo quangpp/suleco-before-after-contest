@@ -25,6 +25,14 @@
    thay bằng URL vừa copy.
 9. Mở `index.html` trực tiếp trong trình duyệt để test, hoặc host lên GitHub Pages / Google Sites / bất kỳ hosting tĩnh nào.
 
+## Khi có link bài "Thể lệ chi tiết" trên Fanpage
+
+Mở [index.html](index.html), tìm dòng:
+```js
+RULES_URL: 'PASTE_FANPAGE_RULES_POST_LINK_HERE'
+```
+thay bằng link bài viết thật. Trước khi điền, link "Xem thể lệ chi tiết" ở footer sẽ tự ẩn đi (tránh dẫn tới trang lỗi).
+
 ## Lưu ý
 
 - Ảnh học viên gửi lên sẽ tự động lưu vào Drive theo cấu trúc:
