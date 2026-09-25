@@ -201,6 +201,17 @@
   }
 
   .admin-modal{max-width:960px;}
+  .bulk-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-top:14px;padding:8px 12px;background:#fafafa;border:1px solid var(--border);border-radius:8px;
+  }
+  .bulk-bar span{font-size:12.5px;color:var(--muted);font-weight:600;}
+  .btn-bulk-delete{
+    background:#fff;color:#b91c1c;border:1px solid #fca5a5;padding:7px 14px;
+    border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .15s;
+  }
+  .btn-bulk-delete:hover:not(:disabled){background:#fee2e2;}
+  .btn-bulk-delete:disabled{opacity:.4;cursor:not-allowed;}
   table.admin-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px;}
   table.admin-table th,table.admin-table td{border-bottom:1px solid var(--border);padding:8px 6px;text-align:left;vertical-align:top;}
   table.admin-table input[type=number],table.admin-table select,table.admin-table input[type=text]{
@@ -361,10 +372,15 @@
     <button class="close" onclick="closeModal('adminPanelOverlay')">&times;</button>
     <h2>Quản trị bài dự thi</h2>
     <p class="hint">Cập nhật số Like / Share / Điểm BTC / Trạng thái cho từng bài, sau đó bấm Lưu.</p>
+    <div class="bulk-bar">
+      <span id="bulkCount">Đã chọn: 0</span>
+      <button type="button" class="btn-bulk-delete" id="bulkDeleteBtn" disabled onclick="bulkDeleteSelected()">Xóa các bài đã chọn</button>
+    </div>
     <div style="max-height:60vh;overflow:auto;">
       <table class="admin-table" id="adminTable">
         <thead>
           <tr>
+            <th><input type="checkbox" id="selectAllAdmin" onchange="toggleSelectAllAdmin(this)"></th>
             <th>Ảnh</th><th>Họ tên</th><th>Hạng mục</th><th>Like</th><th>Share</th>
             <th>Điểm BTC</th><th>Trạng thái</th><th>Ghi chú</th><th></th>
           </tr>
@@ -599,6 +615,7 @@
     const body = document.getElementById('adminTableBody');
     body.innerHTML = allData.map(it => `
       <tr data-id="${it.ID}">
+        <td><input type="checkbox" class="row-select" value="${it.ID}" onchange="updateBulkBar()"></td>
         <td>
           <div class="thumb-pair">
             <img src="${driveImg(it.AnhTruocUrl, 80)}"><img src="${driveImg(it.AnhSauUrl, 80)}">
@@ -621,6 +638,46 @@
         </td>
       </tr>
     `).join('');
+    document.getElementById('selectAllAdmin').checked = false;
+    updateBulkBar();
+  }
+
+  function toggleSelectAllAdmin(cb){
+    document.querySelectorAll('.row-select').forEach(el => el.checked = cb.checked);
+    updateBulkBar();
+  }
+
+  function updateBulkBar(){
+    const checked = document.querySelectorAll('.row-select:checked');
+    document.getElementById('bulkCount').textContent = 'Đã chọn: ' + checked.length;
+    document.getElementById('bulkDeleteBtn').disabled = checked.length === 0;
+  }
+
+  async function bulkDeleteSelected(){
+    const ids = [...document.querySelectorAll('.row-select:checked')].map(el => el.value);
+    if(ids.length === 0) return;
+    if(!confirm(`Xóa ${ids.length} bài dự thi đã chọn? Hành động này không thể hoàn tác.`)) return;
+
+    const btn = document.getElementById('bulkDeleteBtn');
+    btn.disabled = true;
+    btn.textContent = 'Đang xóa…';
+    try{
+      const res = await fetch(CONFIG.WEBAPP_URL, {
+        method:'POST',
+        body: JSON.stringify({ action:'adminDeleteBulk', password: adminPassword, ids })
+      });
+      const json = await res.json();
+      if(json.ok){
+        await loadData();
+        renderAdminTable();
+      } else {
+        alert('Lỗi: '+json.error);
+      }
+    }catch(err){
+      alert('Lỗi: '+err.message);
+    }finally{
+      btn.textContent = 'Xóa các bài đã chọn';
+    }
   }
 
   async function saveRow(id, btn){

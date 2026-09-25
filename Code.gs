@@ -121,6 +121,9 @@ function doPost(e) {
   if (action === 'adminDelete') {
     return handleAdminDelete_(payload);
   }
+  if (action === 'adminDeleteBulk') {
+    return handleAdminDeleteBulk_(payload);
+  }
   return jsonOut_({ ok: false, error: 'Unknown action' });
 }
 
@@ -189,4 +192,21 @@ function handleAdminDelete_(payload) {
   }
   sheet.deleteRow(rowNum);
   return jsonOut_({ ok: true });
+}
+
+function handleAdminDeleteBulk_(payload) {
+  if (!checkAdmin_(payload.password)) {
+    return jsonOut_({ ok: false, error: 'Sai mật khẩu admin' });
+  }
+  const ids = Array.isArray(payload.ids) ? payload.ids : [];
+  const sheet = getSheet_();
+  let deleted = 0;
+  ids.forEach(id => {
+    const rowNum = findRowById_(sheet, id);
+    if (rowNum !== -1) {
+      sheet.deleteRow(rowNum);
+      deleted++;
+    }
+  });
+  return jsonOut_({ ok: true, deleted: deleted });
 }

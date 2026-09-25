@@ -25,18 +25,10 @@
    thay bằng URL vừa copy.
 9. Mở `index.html` trực tiếp trong trình duyệt để test, hoặc host lên GitHub Pages / Google Sites / bất kỳ hosting tĩnh nào.
 
-## Khi có link bài "Thể lệ chi tiết" trên Fanpage
-
-Mở [index.html](index.html), tìm dòng:
-```js
-RULES_URL: 'PASTE_FANPAGE_RULES_POST_LINK_HERE'
-```
-thay bằng link bài viết thật. Trước khi điền, link "Xem thể lệ chi tiết" ở footer sẽ tự ẩn đi (tránh dẫn tới trang lỗi).
-
 ## Lưu ý
 
 - Ảnh học viên gửi lên sẽ tự động lưu vào Drive theo cấu trúc:
   `Suleco BA Contest - Anh / <Hạng mục> / <Tên người dự thi> / <Tên> - <Hạng mục> - Truoc.ext` (và `- Sau.ext`), chia sẻ dạng "Anyone with link". Trang web chỉ hiển thị bản thu nhỏ (qua Google thumbnail) để load nhanh — file gốc trên Drive vẫn giữ nguyên dung lượng/chất lượng.
-- **Bạn vừa cập nhật `Code.gs` (cấu trúc thư mục Drive)** — cần dán lại nội dung mới vào Apps Script editor rồi **Deploy → Manage deployments → Edit (biểu tượng bút) → New version → Deploy** để thay đổi có hiệu lực trên URL `/exec` hiện tại (không cần đổi URL trong `index.html`).
-- Bài mới đăng ký sẽ có trạng thái **"Chờ duyệt"**; BTC vào khu vực **Quản trị** trên trang web (nút góc trên bên phải) để duyệt (`Đã duyệt`) và nhập số Like/Share/Điểm.
+- Bài mới đăng ký sẽ có trạng thái **"Chờ duyệt"**; BTC vào khu vực **Quản trị** trên trang web (nút góc trên bên phải) để duyệt (`Đã duyệt`) và nhập số Like/Share/Điểm. Có thể **tick chọn nhiều bài rồi xóa hàng loạt** bằng nút "Xóa các bài đã chọn".
 - Giới hạn Apps Script Web App: mỗi request tối đa **~50MB** — ảnh JPG/PNG thường (vài đến ~30MB) không vấn đề gì; nếu học viên gửi RAW quá nặng có thể lỗi, trang web sẽ cảnh báo khi ảnh quá lớn.
+- **Mỗi khi sửa `Code.gs`** (như thao tác xóa hàng loạt vừa thêm) — cần dán lại nội dung mới vào Apps Script editor rồi **Deploy → Manage deployments → Edit (biểu tượng bút) → New version → Deploy** để thay đổi có hiệu lực trên URL `/exec` hiện tại (không cần đổi URL trong `index.html`).
