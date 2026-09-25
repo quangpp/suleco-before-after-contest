@@ -45,6 +45,16 @@ function getSheet_() {
   return sheet;
 }
 
+function getHeaderMap_(sheet) {
+  // Đọc đúng tiêu đề thực tế trong Sheet để tìm cột theo TÊN thay vì số thứ tự
+  // cố định — an toàn kể cả khi ai đó kéo đổi vị trí cột trong Google Sheet.
+  const lastCol = sheet.getLastColumn();
+  const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  const map = {};
+  headers.forEach((h, i) => { if (h) map[h] = i + 1; });
+  return map;
+}
+
 function getFolder_() {
   const it = DriveApp.getFoldersByName(DRIVE_FOLDER_NAME);
   if (it.hasNext()) return it.next();
@@ -162,10 +172,24 @@ function handleRegister_(payload) {
   const anhSauUrl = saveImage_(folder, payload.anhSau, baseName + ' - Sau');
 
   const sheet = getSheet_();
-  sheet.appendRow([
-    nowVietnam_(), id, hoTen, hangMuc, linkFacebook,
-    anhTruocUrl, anhSauUrl, 0, 0, 0, 'Chờ duyệt', '', 0, 'Có'
-  ]);
+  const map = getHeaderMap_(sheet);
+  const row = new Array(sheet.getLastColumn()).fill('');
+  const setCol = (name, value) => { if (map[name]) row[map[name] - 1] = value; };
+  setCol('Timestamp', nowVietnam_());
+  setCol('ID', id);
+  setCol('HoTen', hoTen);
+  setCol('HangMuc', hangMuc);
+  setCol('LinkFacebook', linkFacebook);
+  setCol('AnhTruocUrl', anhTruocUrl);
+  setCol('AnhSauUrl', anhSauUrl);
+  setCol('SoLike', 0);
+  setCol('SoShare', 0);
+  setCol('SoComment', 0);
+  setCol('DiemBTC', 0);
+  setCol('TrangThai', 'Chờ duyệt');
+  setCol('GhiChu', '');
+  setCol('DongYSuDungAnh', 'Có');
+  sheet.appendRow(row);
 
   return jsonOut_({ ok: true, id: id });
 }
@@ -187,10 +211,11 @@ function handleAdminUpdate_(payload) {
   if (rowNum === -1) {
     return jsonOut_({ ok: false, error: 'Không tìm thấy bài đăng ký' });
   }
-  const colMap = { SoLike: 8, SoShare: 9, DiemBTC: 10, TrangThai: 11, GhiChu: 12, SoComment: 13 };
-  Object.keys(colMap).forEach(key => {
-    if (payload.fields && Object.prototype.hasOwnProperty.call(payload.fields, key)) {
-      sheet.getRange(rowNum, colMap[key]).setValue(payload.fields[key]);
+  const map = getHeaderMap_(sheet);
+  const fieldNames = ['SoLike', 'SoShare', 'SoComment', 'DiemBTC', 'TrangThai', 'GhiChu'];
+  fieldNames.forEach(key => {
+    if (payload.fields && Object.prototype.hasOwnProperty.call(payload.fields, key) && map[key]) {
+      sheet.getRange(rowNum, map[key]).setValue(payload.fields[key]);
     }
   });
   return jsonOut_({ ok: true });
