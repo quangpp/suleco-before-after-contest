@@ -371,7 +371,7 @@
   <div class="modal admin-modal">
     <button class="close" onclick="closeModal('adminPanelOverlay')">&times;</button>
     <h2>Quản trị bài dự thi</h2>
-    <p class="hint">Cập nhật số Like / Share / Điểm BTC / Trạng thái cho từng bài, sau đó bấm Lưu.</p>
+    <p class="hint">Cập nhật số Like / Share / Comment / Điểm BTC / Trạng thái cho từng bài, sau đó bấm Lưu.</p>
     <div class="bulk-bar">
       <span id="bulkCount">Đã chọn: 0</span>
       <button type="button" class="btn-bulk-delete" id="bulkDeleteBtn" disabled onclick="bulkDeleteSelected()">Xóa các bài đã chọn</button>
@@ -381,7 +381,7 @@
         <thead>
           <tr>
             <th><input type="checkbox" id="selectAllAdmin" onchange="toggleSelectAllAdmin(this)"></th>
-            <th>Ảnh</th><th>Họ tên</th><th>Hạng mục</th><th>Like</th><th>Share</th>
+            <th>Ảnh</th><th>Họ tên</th><th>Hạng mục</th><th>Like</th><th>Share</th><th>Comment</th>
             <th>Điểm BTC</th><th>Trạng thái</th><th>Ghi chú</th><th></th>
           </tr>
         </thead>
@@ -435,8 +435,8 @@
   }
 
   function score(item){
-    const like = Number(item.SoLike)||0, share = Number(item.SoShare)||0, diem = Number(item.DiemBTC)||0;
-    return diem*1000 + like + share*2;
+    const like = Number(item.SoLike)||0, share = Number(item.SoShare)||0, diem = Number(item.DiemBTC)||0, comment = Number(item.SoComment)||0;
+    return diem*1000 + like + share*2 + comment*2;
   }
 
   function driveImg(url, width){
@@ -474,6 +474,7 @@
           <div class="stats">
             <span>👍 <b>${Number(it.SoLike)||0}</b></span>
             <span>🔁 <b>${Number(it.SoShare)||0}</b></span>
+            <span>💬 <b>${Number(it.SoComment)||0}</b></span>
             <span>⭐ <b>${Number(it.DiemBTC)||0}</b></span>
           </div>
           <div class="card-footer">
@@ -625,6 +626,7 @@
         <td>${escapeHtml(it.HangMuc)}</td>
         <td><input type="number" class="f-like" value="${Number(it.SoLike)||0}"></td>
         <td><input type="number" class="f-share" value="${Number(it.SoShare)||0}"></td>
+        <td><input type="number" class="f-comment" value="${Number(it.SoComment)||0}"></td>
         <td><input type="number" class="f-diem" value="${Number(it.DiemBTC)||0}"></td>
         <td>
           <select class="f-trangthai">
@@ -685,6 +687,7 @@
     const fields = {
       SoLike: Number(tr.querySelector('.f-like').value)||0,
       SoShare: Number(tr.querySelector('.f-share').value)||0,
+      SoComment: Number(tr.querySelector('.f-comment').value)||0,
       DiemBTC: Number(tr.querySelector('.f-diem').value)||0,
       TrangThai: tr.querySelector('.f-trangthai').value,
       GhiChu: tr.querySelector('.f-ghichu').value

@@ -14,7 +14,7 @@
 const SHEET_NAME = 'DangKy';
 const DRIVE_FOLDER_NAME = 'Suleco BA Contest - Anh';
 const HEADERS = ['Timestamp', 'ID', 'HoTen', 'HangMuc', 'LinkFacebook',
-  'AnhTruocUrl', 'AnhSauUrl', 'SoLike', 'SoShare', 'DiemBTC', 'TrangThai', 'GhiChu'];
+  'AnhTruocUrl', 'AnhSauUrl', 'SoLike', 'SoShare', 'DiemBTC', 'TrangThai', 'GhiChu', 'SoComment'];
 
 function setAdminPassword() {
   // Run this once manually, after editing the password string below.
@@ -29,6 +29,12 @@ function getSheet_() {
   }
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS);
+  } else {
+    // Tự thêm cột header còn thiếu (ví dụ khi mới thêm SoComment) mà không đụng dữ liệu cũ.
+    const lastCol = sheet.getLastColumn();
+    if (lastCol < HEADERS.length) {
+      sheet.getRange(1, lastCol + 1, 1, HEADERS.length - lastCol).setValues([HEADERS.slice(lastCol)]);
+    }
   }
   return sheet;
 }
@@ -149,7 +155,7 @@ function handleRegister_(payload) {
   const sheet = getSheet_();
   sheet.appendRow([
     new Date(), id, hoTen, hangMuc, linkFacebook,
-    anhTruocUrl, anhSauUrl, 0, 0, 0, 'Chờ duyệt', ''
+    anhTruocUrl, anhSauUrl, 0, 0, 0, 'Chờ duyệt', '', 0
   ]);
 
   return jsonOut_({ ok: true, id: id });
@@ -172,7 +178,7 @@ function handleAdminUpdate_(payload) {
   if (rowNum === -1) {
     return jsonOut_({ ok: false, error: 'Không tìm thấy bài đăng ký' });
   }
-  const colMap = { SoLike: 8, SoShare: 9, DiemBTC: 10, TrangThai: 11, GhiChu: 12 };
+  const colMap = { SoLike: 8, SoShare: 9, DiemBTC: 10, TrangThai: 11, GhiChu: 12, SoComment: 13 };
   Object.keys(colMap).forEach(key => {
     if (payload.fields && Object.prototype.hasOwnProperty.call(payload.fields, key)) {
       sheet.getRange(rowNum, colMap[key]).setValue(payload.fields[key]);
