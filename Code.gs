@@ -39,6 +39,23 @@ function getFolder_() {
   return DriveApp.createFolder(DRIVE_FOLDER_NAME);
 }
 
+function getOrCreateSubfolder_(parent, name) {
+  const it = parent.getFoldersByName(name);
+  if (it.hasNext()) return it.next();
+  return parent.createFolder(name);
+}
+
+function sanitizeName_(s) {
+  return (s || '').toString().replace(/[\/\\:*?"<>|]/g, '-').trim();
+}
+
+// Root > Hạng mục (Chân dung / Phong cảnh) > Tên người dự thi
+function getContestantFolder_(hoTen, hangMuc) {
+  const root = getFolder_();
+  const catFolder = getOrCreateSubfolder_(root, sanitizeName_(hangMuc));
+  return getOrCreateSubfolder_(catFolder, sanitizeName_(hoTen));
+}
+
 function jsonOut_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
@@ -120,11 +137,11 @@ function handleRegister_(payload) {
   }
 
   const id = Utilities.getUuid();
-  const folder = getFolder_();
-  const baseName = hoTen.replace(/[^a-zA-Z0-9À-ỹ ]/g, '').replace(/\s+/g, '_');
+  const folder = getContestantFolder_(hoTen, hangMuc);
+  const baseName = sanitizeName_(hoTen) + ' - ' + sanitizeName_(hangMuc);
 
-  const anhTruocUrl = saveImage_(folder, payload.anhTruoc, baseName + '_Truoc_' + id.slice(0, 8));
-  const anhSauUrl = saveImage_(folder, payload.anhSau, baseName + '_Sau_' + id.slice(0, 8));
+  const anhTruocUrl = saveImage_(folder, payload.anhTruoc, baseName + ' - Truoc');
+  const anhSauUrl = saveImage_(folder, payload.anhSau, baseName + ' - Sau');
 
   const sheet = getSheet_();
   sheet.appendRow([

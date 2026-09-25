@@ -27,7 +27,8 @@
 
 ## Lưu ý
 
-- Ảnh học viên gửi lên sẽ tự động lưu vào 1 thư mục Drive tên **"Suleco BA Contest - Anh"** (tự tạo ở lần đăng ký đầu tiên), dạng chia sẻ "Anyone with link".
-- Nếu về sau sửa `Code.gs`, phải **Deploy → Manage deployments → Edit (biểu tượng bút) → New version → Deploy** thì thay đổi mới có hiệu lực trên URL `/exec` cũ (không cần đổi URL trong `index.html`).
+- Ảnh học viên gửi lên sẽ tự động lưu vào Drive theo cấu trúc:
+  `Suleco BA Contest - Anh / <Hạng mục> / <Tên người dự thi> / <Tên> - <Hạng mục> - Truoc.ext` (và `- Sau.ext`), chia sẻ dạng "Anyone with link". Trang web chỉ hiển thị bản thu nhỏ (qua Google thumbnail) để load nhanh — file gốc trên Drive vẫn giữ nguyên dung lượng/chất lượng.
+- **Bạn vừa cập nhật `Code.gs` (cấu trúc thư mục Drive)** — cần dán lại nội dung mới vào Apps Script editor rồi **Deploy → Manage deployments → Edit (biểu tượng bút) → New version → Deploy** để thay đổi có hiệu lực trên URL `/exec` hiện tại (không cần đổi URL trong `index.html`).
 - Bài mới đăng ký sẽ có trạng thái **"Chờ duyệt"**; BTC vào khu vực **Quản trị** trên trang web (nút góc trên bên phải) để duyệt (`Đã duyệt`) và nhập số Like/Share/Điểm.
 - Giới hạn Apps Script Web App: mỗi request tối đa **~50MB** — ảnh JPG/PNG thường (vài đến ~30MB) không vấn đề gì; nếu học viên gửi RAW quá nặng có thể lỗi, trang web sẽ cảnh báo khi ảnh quá lớn.
