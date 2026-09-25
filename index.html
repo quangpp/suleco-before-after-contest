@@ -197,6 +197,12 @@
   .modal p.hint{margin:0 0 18px;color:var(--muted);font-size:13px;}
   .modal .close{float:right;border:none;background:none;font-size:20px;cursor:pointer;color:var(--muted);}
   label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px;}
+  label.consent-row{
+    display:flex;align-items:flex-start;gap:8px;font-weight:500;font-size:13px;
+    color:var(--ink);margin:16px 0 0;cursor:pointer;
+  }
+  label.consent-row input{margin-top:2px;flex:0 0 auto;width:16px;height:16px;cursor:pointer;}
+  label.consent-row span{flex:1;}
   input[type=text],input[type=url],select,textarea{
     width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;
   }
@@ -357,6 +363,11 @@
 
       <label>Link bài đã đăng Facebook</label>
       <input type="url" id="linkFacebook" required placeholder="https://facebook.com/...">
+
+      <label class="consent-row">
+        <input type="checkbox" id="dongYSuDungAnh" required>
+        <span>Chấp nhận cho Suleco sử dụng hình ảnh cho mục đích truyền thông</span>
+      </label>
 
       <div class="msg" id="registerMsg"></div>
 
@@ -570,10 +581,16 @@
     const hoTen = document.getElementById('hoTen').value.trim();
     const hangMuc = document.getElementById('hangMuc').value;
     const linkFacebook = document.getElementById('linkFacebook').value.trim();
+    const dongYSuDungAnh = document.getElementById('dongYSuDungAnh').checked;
 
     if(!fileData.truoc || !fileData.sau){
       msg.className = 'msg error'; msg.style.display='block';
       msg.textContent = 'Vui lòng chọn đủ ảnh Trước và Sau.';
+      return false;
+    }
+    if(!dongYSuDungAnh){
+      msg.className = 'msg error'; msg.style.display='block';
+      msg.textContent = 'Vui lòng đồng ý cho Suleco sử dụng hình ảnh cho mục đích truyền thông.';
       return false;
     }
 
@@ -586,7 +603,7 @@
         method: 'POST',
         body: JSON.stringify({
           action: 'register',
-          hoTen, hangMuc, linkFacebook,
+          hoTen, hangMuc, linkFacebook, dongYSuDungAnh,
           anhTruoc: { name: fileData.truoc.name, mimeType: fileData.truoc.mimeType, data: fileData.truoc.data },
           anhSau: { name: fileData.sau.name, mimeType: fileData.sau.mimeType, data: fileData.sau.data }
         })

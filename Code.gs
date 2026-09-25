@@ -14,7 +14,7 @@
 const SHEET_NAME = 'DangKy';
 const DRIVE_FOLDER_NAME = 'Suleco BA Contest - Anh';
 const HEADERS = ['Timestamp', 'ID', 'HoTen', 'HangMuc', 'LinkFacebook',
-  'AnhTruocUrl', 'AnhSauUrl', 'SoLike', 'SoShare', 'DiemBTC', 'TrangThai', 'GhiChu', 'SoComment'];
+  'AnhTruocUrl', 'AnhSauUrl', 'SoLike', 'SoShare', 'DiemBTC', 'TrangThai', 'GhiChu', 'SoComment', 'DongYSuDungAnh'];
 
 function setAdminPassword() {
   // Run this once manually, after editing the password string below.
@@ -144,6 +144,9 @@ function handleRegister_(payload) {
   if (!payload.anhTruoc || !payload.anhSau) {
     return jsonOut_({ ok: false, error: 'Thiếu ảnh Trước/Sau' });
   }
+  if (payload.dongYSuDungAnh !== true) {
+    return jsonOut_({ ok: false, error: 'Cần đồng ý cho Suleco sử dụng hình ảnh cho mục đích truyền thông' });
+  }
 
   const id = Utilities.getUuid();
   const folder = getContestantFolder_(hoTen, hangMuc);
@@ -155,7 +158,7 @@ function handleRegister_(payload) {
   const sheet = getSheet_();
   sheet.appendRow([
     new Date(), id, hoTen, hangMuc, linkFacebook,
-    anhTruocUrl, anhSauUrl, 0, 0, 0, 'Chờ duyệt', '', 0
+    anhTruocUrl, anhSauUrl, 0, 0, 0, 'Chờ duyệt', '', 0, 'Có'
   ]);
 
   return jsonOut_({ ok: true, id: id });
