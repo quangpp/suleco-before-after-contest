@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cuộc thi ảnh "Hành trình Ngày ấy - Bây giờ" — Suleco</title>
+<title>Cuộc thi ảnh "Hành trình Ngày ấy - Bây giờ" - Suleco</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -36,7 +36,6 @@
   header.site h1{margin:0 0 6px;font-size:clamp(22px,4vw,32px);}
   .site-logo{height:38px;display:block;margin:0 auto 14px;}
   header.site p{margin:0;opacity:.9;font-size:14px;}
-  header.site p.rules-line{margin-top:10px;}
   .admin-link{
     position:absolute;top:14px;right:16px;
     background:rgba(255,255,255,.15);
@@ -133,10 +132,7 @@
   .social-row svg{width:17px;height:17px;}
   .rules-link{color:var(--primary);font-weight:600;font-size:12.5px;text-decoration:none;}
   .rules-link:hover{text-decoration:underline;}
-  header.site .rules-link{
-    color:#fff;text-decoration:underline;text-underline-offset:3px;opacity:.9;font-size:13px;
-  }
-  header.site .rules-link:hover{opacity:1;}
+  .site-footer .rules-line{margin-bottom:2px;}
 
   .modal-overlay{
     position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;
@@ -197,24 +193,8 @@
   <button class="admin-link" onclick="openAdminLogin()">Quản trị</button>
   <a href="https://suleco.vn/" target="_blank" rel="noopener"><img src="assets/suleco-logo-white.webp" alt="Suleco" class="site-logo"></a>
   <h1>Cuộc thi ảnh "Hành trình Ngày ấy - Bây giờ"</h1>
-  <p>Học viên Suleco — theo dõi bài dự thi theo thời gian thực</p>
-  <p class="rules-line"><a class="rules-link" id="rulesLink" href="#" target="_blank" rel="noopener">Xem thể lệ chi tiết</a></p>
+  <p>Học viên Suleco - theo dõi bài dự thi theo thời gian thực</p>
 </header>
-
-<!-- Dải ảnh học viên (ngoài lề cuộc thi) — đang dùng ảnh placeholder, thay bằng ảnh thật của Suleco khi có -->
-<section class="student-gallery">
-  <p class="student-gallery-label">Khoảnh khắc học viên Suleco</p>
-  <div class="student-gallery-track">
-    <img src="https://picsum.photos/seed/suleco1/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco2/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco3/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco4/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco5/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco6/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco7/300/380" loading="lazy" alt="Học viên Suleco">
-    <img src="https://picsum.photos/seed/suleco8/300/380" loading="lazy" alt="Học viên Suleco">
-  </div>
-</section>
 
 <div class="toolbar">
   <div class="tabs">
@@ -229,11 +209,27 @@
   <div class="grid" id="grid"></div>
 </main>
 
+<!-- Dải ảnh học viên (ngoài lề cuộc thi) - đang dùng ảnh placeholder, thay bằng ảnh thật của Suleco khi có -->
+<section class="student-gallery">
+  <p class="student-gallery-label">Khoảnh khắc học viên Suleco</p>
+  <div class="student-gallery-track">
+    <img src="https://picsum.photos/seed/suleco1/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco2/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco3/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco4/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco5/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco6/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco7/300/380" loading="lazy" alt="Học viên Suleco">
+    <img src="https://picsum.photos/seed/suleco8/300/380" loading="lazy" alt="Học viên Suleco">
+  </div>
+</section>
+
 <footer class="site-footer">
   <img src="assets/suleco-logo-maroon.png" alt="Suleco" class="footer-logo">
 
-  <p>© 2026 Suleco — Since 1981</p>
+  <p>© 2026 Suleco - Since 1981</p>
   <p class="footer-sub">Cuộc thi ảnh "Hành trình Ngày ấy - Bây giờ" dành cho học viên Suleco</p>
+  <p class="rules-line"><a class="rules-link" id="rulesLink" href="https://www.facebook.com/suleco.vn/posts/pfbid034fi2jBUB4TiVGfedVyJGpPapL66QNhTMTnNxtBddHtm8HVoY8qFxfLw666GcMfrRl" target="_blank" rel="noopener">Xem thể lệ chi tiết</a></p>
 
   <div class="social-row">
     <a href="https://www.facebook.com/suleco.vn" target="_blank" rel="noopener" aria-label="Facebook Suleco" title="Facebook">
@@ -341,17 +337,8 @@
   const CONFIG = {
     WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbyQMUAVVh127woL6Dt3A0ySxFOiEQJSbv-4uJcWDD-t4Obl8eZTXI-O_YWR1ygb2Q2gKg/exec',
     REFRESH_MS: 15000,
-    MAX_TOTAL_MB: 45, // cảnh báo nếu 2 ảnh base64 cộng lại vượt mức này
-    // Link bài "Thể lệ chi tiết" trên Fanpage Facebook — thay khi có link chính thức:
-    RULES_URL: 'PASTE_FANPAGE_RULES_POST_LINK_HERE'
+    MAX_TOTAL_MB: 45 // cảnh báo nếu 2 ảnh base64 cộng lại vượt mức này
   };
-
-  const rulesLinkEl = document.getElementById('rulesLink');
-  if(CONFIG.RULES_URL && CONFIG.RULES_URL.indexOf('PASTE_') !== 0){
-    rulesLinkEl.href = CONFIG.RULES_URL;
-  } else {
-    rulesLinkEl.style.display = 'none';
-  }
 
   let allData = [];
   let currentTab = 'Chân dung';
