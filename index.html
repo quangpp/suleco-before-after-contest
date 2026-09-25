@@ -110,10 +110,28 @@
     .card:hover{transform:none;}
     .card:hover .photos img{transform:none;}
   }
-  .card .rank{
-    position:absolute;margin:10px;background:var(--gold);color:#fff;
-    font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;
+  .card.top-diem{border-width:2px;}
+  .card.top-diem.rank-1{
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(212,175,55,.18),0 10px 24px rgba(0,0,0,.1);
   }
+  .card.top-diem.rank-2{
+    border-color:#a8b0bb;
+    box-shadow:0 0 0 3px rgba(148,163,184,.18),0 10px 24px rgba(0,0,0,.1);
+  }
+  .card.top-diem.rank-3{
+    border-color:#c17f42;
+    box-shadow:0 0 0 3px rgba(193,127,66,.18),0 10px 24px rgba(0,0,0,.1);
+  }
+  .diem-badge{
+    position:absolute;top:10px;left:10px;z-index:2;
+    display:flex;align-items:center;gap:4px;color:#fff;
+    font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+  }
+  .diem-badge.rank-1{background:linear-gradient(135deg,#f5d576,var(--gold));}
+  .diem-badge.rank-2{background:linear-gradient(135deg,#e2e6ea,#9aa3ad);color:#1a1a1a;}
+  .diem-badge.rank-3{background:linear-gradient(135deg,#e3a86c,#b06a34);}
   .photos{display:grid;grid-template-columns:1fr 1fr;position:relative;background:#000;}
   .photos figure{margin:0;position:relative;aspect-ratio:1/1;overflow:hidden;background:#111;}
   .photos img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -458,10 +476,20 @@
       return;
     }
 
-    grid.innerHTML = items.map((it, idx) => `
-      <div class="card" style="animation-delay:${Math.min(idx,10)*40}ms">
+    // Top 3 nổi bật theo đúng cột Điểm BTC (độc lập với thứ tự sắp xếp tổng hợp ở trên)
+    const topDiemRank = {};
+    [...items]
+      .filter(d => (Number(d.DiemBTC)||0) > 0)
+      .sort((a,b) => (Number(b.DiemBTC)||0) - (Number(a.DiemBTC)||0))
+      .slice(0,3)
+      .forEach((d,i) => { topDiemRank[d.ID] = i+1; });
+
+    grid.innerHTML = items.map((it, idx) => {
+      const diemRank = topDiemRank[it.ID];
+      return `
+      <div class="card ${diemRank ? 'top-diem rank-'+diemRank : ''}" style="animation-delay:${Math.min(idx,10)*40}ms">
         <div class="photos">
-          ${idx<3 ? `<div class="rank">#${idx+1}</div>` : ''}
+          ${diemRank ? `<div class="diem-badge rank-${diemRank}">🏆 Top ${diemRank} · Điểm BTC</div>` : ''}
           <figure><img src="${driveImg(it.AnhTruocUrl, 450)}" loading="lazy"><figcaption>TRƯỚC</figcaption></figure>
           <figure><img src="${driveImg(it.AnhSauUrl, 450)}" loading="lazy"><figcaption>SAU</figcaption></figure>
         </div>
@@ -482,7 +510,8 @@
           </div>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
 
   // ---------- Register modal ----------
