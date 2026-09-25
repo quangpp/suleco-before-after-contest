@@ -468,7 +468,7 @@
   function render(){
     const grid = document.getElementById('grid');
     const items = allData
-      .filter(d => (currentTab === 'Tất cả' || d.HangMuc === currentTab) && d.TrangThai !== 'Từ chối')
+      .filter(d => (currentTab === 'Tất cả' || d.HangMuc === currentTab) && d.TrangThai === 'Đã duyệt')
       .sort((a,b)=> score(b)-score(a));
 
     if(items.length===0){
