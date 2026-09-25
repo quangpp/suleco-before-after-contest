@@ -36,6 +36,7 @@
   header.site h1{margin:0 0 6px;font-size:clamp(22px,4vw,32px);}
   .site-logo{height:38px;display:block;margin:0 auto 14px;}
   header.site p{margin:0;opacity:.9;font-size:14px;}
+  header.site p.rules-line{margin-top:10px;}
   .admin-link{
     position:absolute;top:14px;right:16px;
     background:rgba(255,255,255,.15);
@@ -122,8 +123,8 @@
   }
   .footer-logo{height:26px;margin-bottom:14px;opacity:.85;}
   .site-footer p{margin:2px 0;font-size:12.5px;color:var(--muted);}
-  .site-footer .footer-sub{font-size:12px;}
-  .social-row{display:flex;justify-content:center;gap:10px;margin-bottom:14px;}
+  .site-footer .footer-sub{font-size:12px;margin-bottom:16px;}
+  .social-row{display:flex;justify-content:center;gap:10px;margin-top:16px;}
   .social-row a{
     width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;
     display:flex;align-items:center;justify-content:center;transition:background .15s;
@@ -132,6 +133,10 @@
   .social-row svg{width:17px;height:17px;}
   .rules-link{color:var(--primary);font-weight:600;font-size:12.5px;text-decoration:none;}
   .rules-link:hover{text-decoration:underline;}
+  header.site .rules-link{
+    color:#fff;text-decoration:underline;text-underline-offset:3px;opacity:.9;font-size:13px;
+  }
+  header.site .rules-link:hover{opacity:1;}
 
   .modal-overlay{
     position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;
@@ -193,6 +198,7 @@
   <a href="https://suleco.vn/" target="_blank" rel="noopener"><img src="assets/suleco-logo-white.webp" alt="Suleco" class="site-logo"></a>
   <h1>Cuộc thi ảnh "Hành trình Ngày ấy - Bây giờ"</h1>
   <p>Học viên Suleco — theo dõi bài dự thi theo thời gian thực</p>
+  <p class="rules-line"><a class="rules-link" id="rulesLink" href="#" target="_blank" rel="noopener">Xem thể lệ chi tiết</a></p>
 </header>
 
 <!-- Dải ảnh học viên (ngoài lề cuộc thi) — đang dùng ảnh placeholder, thay bằng ảnh thật của Suleco khi có -->
@@ -226,6 +232,9 @@
 <footer class="site-footer">
   <img src="assets/suleco-logo-maroon.png" alt="Suleco" class="footer-logo">
 
+  <p>© 2026 Suleco — Since 1981</p>
+  <p class="footer-sub">Cuộc thi ảnh "Hành trình Ngày ấy - Bây giờ" dành cho học viên Suleco</p>
+
   <div class="social-row">
     <a href="https://www.facebook.com/suleco.vn" target="_blank" rel="noopener" aria-label="Facebook Suleco" title="Facebook">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9v-2.89h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.45 2.89h-2.33v6.99C18.34 21.13 22 16.99 22 12z"/></svg>
@@ -240,10 +249,6 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 8s-.2-1.4-.8-2.02c-.77-.8-1.63-.8-2.02-.85C16.1 5 12 5 12 5h-.01s-4.1 0-6.98.13c-.39.05-1.25.05-2.02.85-.6.62-.8 2.02-.8 2.02S2 9.64 2 11.28v1.44c0 1.64.2 3.28.2 3.28s.2 1.4.8 2.02c.77.8 1.78.78 2.23.86C6.8 19 12 19 12 19s4.1-.01 6.98-.14c.39-.05 1.25-.05 2.02-.85.6-.62.8-2.02.8-2.02s.2-1.64.2-3.28v-1.44c0-1.64-.2-3.27-.2-3.27zM9.98 14.5v-5l5.02 2.51-5.02 2.49z"/></svg>
     </a>
   </div>
-
-  <p>© 2026 Suleco — Since 1981</p>
-  <p class="footer-sub">Cuộc thi ảnh "Hành trình Ngày ấy - Bây giờ" dành cho học viên Suleco</p>
-  <p><a class="rules-link" id="rulesLink" href="#" target="_blank" rel="noopener">Xem thể lệ chi tiết</a></p>
 </footer>
 
 <!-- Register Modal -->
