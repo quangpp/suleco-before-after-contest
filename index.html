@@ -40,16 +40,18 @@
     z-index:-1;
     pointer-events:none;
     background:linear-gradient(90deg,
-      rgba(100,116,139,.06) 0%,
-      transparent 45%,
-      transparent 55%,
-      rgba(225,29,72,.07) 100%);
-    animation:journey-drift 26s ease-in-out infinite;
+      rgba(71,85,105,.16) 0%,
+      rgba(71,85,105,.05) 30%,
+      transparent 48%,
+      transparent 52%,
+      rgba(225,29,72,.07) 70%,
+      rgba(225,29,72,.20) 100%);
+    animation:journey-drift 18s ease-in-out infinite;
     will-change:transform;
   }
   @keyframes journey-drift{
-    0%,100%{transform:translateX(-2%);}
-    50%{transform:translateX(2%);}
+    0%,100%{transform:translateX(-6%);}
+    50%{transform:translateX(6%);}
   }
   @media (prefers-reduced-motion:reduce){
     body::before{animation:none;}
