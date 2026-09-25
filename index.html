@@ -198,7 +198,8 @@
 
 <div class="toolbar">
   <div class="tabs">
-    <button class="active" data-cat="Chân dung" onclick="switchTab('Chân dung', this)">Chân dung</button>
+    <button class="active" data-cat="Tất cả" onclick="switchTab('Tất cả', this)">Tất cả</button>
+    <button data-cat="Chân dung" onclick="switchTab('Chân dung', this)">Chân dung</button>
     <button data-cat="Phong cảnh" onclick="switchTab('Phong cảnh', this)">Phong cảnh</button>
   </div>
   <button class="btn-primary" onclick="openRegister()">+ Đăng ký dự thi</button>
@@ -341,7 +342,7 @@
   };
 
   let allData = [];
-  let currentTab = 'Chân dung';
+  let currentTab = 'Tất cả';
   let adminPassword = null;
 
   function switchTab(cat, btn){
@@ -390,7 +391,7 @@
   function render(){
     const grid = document.getElementById('grid');
     const items = allData
-      .filter(d => d.HangMuc === currentTab && d.TrangThai !== 'Từ chối')
+      .filter(d => (currentTab === 'Tất cả' || d.HangMuc === currentTab) && d.TrangThai !== 'Từ chối')
       .sort((a,b)=> score(b)-score(a));
 
     if(items.length===0){
